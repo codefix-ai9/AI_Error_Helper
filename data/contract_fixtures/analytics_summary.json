@@ -1,0 +1,13 @@
+{
+  "total_analyses": 100,
+  "errors_by_type": {
+    "Syntax": 45,
+    "Name / Reference": 30,
+    "Type": 25
+  },
+  "errors_by_language": {
+    "python": 50,
+    "java": 30,
+    "javascript": 20
+  }
+}

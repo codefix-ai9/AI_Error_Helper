@@ -1,0 +1,10 @@
+[
+  {
+    "analysis_id": "893c524c-1d5d-4f32-84e1-7d34190c681f",
+    "created_at": "2026-09-24T10:00:00Z",
+    "language": "python",
+    "error_type": "Name / Reference",
+    "severity": "HIGH",
+    "summary": "Name / Reference · line 8 · 'total' is not defined"
+  }
+]

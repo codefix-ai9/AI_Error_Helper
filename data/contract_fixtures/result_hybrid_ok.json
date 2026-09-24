@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "893c524c-1d5d-4f32-84e1-7d34190c681f",
+  "created_at": "2026-09-24T10:00:00Z",
+  "language": "python",
+  "error_type": "Name / Reference",
+  "severity": "HIGH",
+  "location": {"line": 8, "column": null, "end_line": null},
+  "summary": "Name / Reference · line 8 · 'total' is not defined",
+  "explanation": "You tried to use the variable 'total', but it has not been defined yet.",
+  "probable_cause": "Typo in variable name or using before assigning.",
+  "affected_code": "print(total)",
+  "corrected_code": "total = 10\nprint(total)",
+  "correction_diff": {
+    "changed_lines_before": [8],
+    "changed_lines_after": [8, 9],
+    "unified": "--- \n+++ \n@@ -7,2 +7,3 @@\n-print(total)\n+total = 10\n+print(total)"
+  },
+  "debugging_steps": ["Check if 'total' is initialized."],
+  "prevention_tip": "Always initialize variables before using them.",
+  "key_concept": "Variable Scope",
+  "confidence": 0.95,
+  "confidence_basis": ["parser-confirmed"],
+  "uncertainty_note": null,
+  "static_findings": [
+    {
+      "rule_id": "PY-NAME-001",
+      "category": "Name / Reference",
+      "evidence_level": "PATTERN",
+      "source": "rule",
+      "message": "Name 'total' is used on line 8 but never defined.",
+      "location": {"line": 8, "column": null, "end_line": null},
+      "snippet": "print(total)",
+      "concept": "variable scope"
+    }
+  ],
+  "ai_suggestions": [
+    {
+      "kind": "explanation",
+      "text": "You tried to use 'total' before defining it.",
+      "provenance": "ai"
+    }
+  ],
+  "practice_exercise": "Create a variable named 'total' and assign it the sum of 5 and 5, then print it.",
+  "quiz_question": "What happens when you use a variable before assigning a value in Python?",
+  "verification": {
+    "corrected_code_parses": true,
+    "original_finding_resolved": true,
+    "note": "Passes syntax/static re-check. This is NOT proof of correct behavior."
+  },
+  "provenance": {
+    "error_type": "static",
+    "severity": "static",
+    "location": "static",
+    "explanation": "ai",
+    "corrected_code": "ai",
+    "debugging_steps": "ai",
+    "prevention_tip": "ai"
+  },
+  "ai_status": "ok",
+  "analysis_metadata": {
+    "analysis_mode": "hybrid",
+    "pipeline_version": "1.0",
+    "prompt_version": "",
+    "provider": "mock",
+    "model": "mock-model",
+    "ai_latency_ms": 150,
+    "analyzers_run": ["python_ast"],
+    "analyzer_errors": [],
+    "warnings": [],
+    "history_saved": true
+  }
+}
