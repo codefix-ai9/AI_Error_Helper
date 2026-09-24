@@ -11,3 +11,9 @@
 - Teammate machine: NOT VERIFIED
 - Fresh-clone test: PENDING
 - pip-audit: NOT YET RUN
+
+## A-M2 Sync
+- **Date**: 2026-09-24
+- **Command**: `python scripts/tasks.py test`
+- **Output Summary**: 14 passed in 1.11s (all input layer validation, preprocessing, collector, and registry tests PASSED). Coverage 89% overall.
+- **Exit Code**: 0
