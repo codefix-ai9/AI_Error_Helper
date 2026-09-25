@@ -40,3 +40,11 @@ data/app.db-journal
 # OS
 .DS_Store
 Thumbs.db
+
+# --- Part B ---
+node_modules/
+frontend/dist/
+frontend/.env
+.pytest_cache/
+data/*.db
+powershell.cmd

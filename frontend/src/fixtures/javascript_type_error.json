@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "22222222-2222-4222-8222-222222222222",
+  "created_at": "2026-09-24T11:15:00Z",
+  "language": "javascript",
+  "error_type": "Type",
+  "severity": "MEDIUM",
+  "location": {
+    "line": 6,
+    "column": 14,
+    "end_line": 6
+  },
+  "summary": "TypeError: user.toLowerCase is not a function (null / non-string object).",
+  "explanation": "In JavaScript, calling string methods on an object that is null, undefined, or a different primitive type throws a TypeError at runtime. On line 6, user is accessed as a string without prior type or existence check.",
+  "probable_cause": "The variable 'user' was initialized as an object or undefined rather than a string.",
+  "affected_code": "return user.toLowerCase();",
+  "corrected_code": "return (typeof user === 'string') ? user.toLowerCase() : '';",
+  "correction_diff": {
+    "changed_lines_before": [6],
+    "changed_lines_after": [6],
+    "unified": "@@ -5,3 +5,3 @@\n-return user.toLowerCase();\n+return (typeof user === 'string') ? user.toLowerCase() : '';"
+  },
+  "debugging_steps": [
+    "Check what argument is being passed into the function call.",
+    "Log typeof user before invoking toLowerCase().",
+    "Add optional chaining (user?.toLowerCase?.()) or type guard check.",
+    "Handle non-string fallback cases gracefully."
+  ],
+  "prevention_tip": "Validate input parameter types or use TypeScript/JSDoc type annotations to guarantee argument contracts.",
+  "key_concept": "Runtime Type Guarding",
+  "confidence": 0.88,
+  "confidence_basis": [
+    "traceback TypeError match",
+    "method invocation on unverified parameter in AST"
+  ],
+  "uncertainty_note": "Static analysis detected method call without type guard; exact runtime value may vary per call.",
+  "static_findings": [
+    {
+      "rule_id": "JS-TYPE-004",
+      "category": "Type",
+      "evidence_level": "PATTERN",
+      "source": "rule",
+      "message": "Method 'toLowerCase' invoked on parameter 'user' without preceding type check.",
+      "location": {
+        "line": 6,
+        "column": 14
+      },
+      "snippet": "return user.toLowerCase();",
+      "concept": "type safety"
+    }
+  ],
+  "ai_suggestions": [
+    {
+      "kind": "explanation",
+      "text": "[MOCK] Ensure 'user' is guaranteed to be a string before invoking string prototype methods.",
+      "provenance": "ai"
+    },
+    {
+      "kind": "correction",
+      "text": "[MOCK] Guard with typeof check or optional chaining.",
+      "provenance": "ai"
+    }
+  ],
+  "verification": {
+    "corrected_code_parses": true,
+    "original_finding_resolved": true,
+    "note": "Passes syntax/static re-check. This is NOT proof of correct behavior."
+  },
+  "provenance": {
+    "error_type": "static",
+    "severity": "static",
+    "location": "static",
+    "explanation": "ai",
+    "corrected_code": "ai",
+    "debugging_steps": "ai",
+    "prevention_tip": "ai"
+  },
+  "ai_status": "mock",
+  "analysis_metadata": {
+    "analysis_mode": "hybrid",
+    "pipeline_version": "1.0.0",
+    "prompt_version": "v1.0",
+    "provider": "mock",
+    "model": "deterministic-mock-v1",
+    "ai_latency_ms": 15,
+    "analyzers_run": [
+      "js-ast-analyzer",
+      "js-error-parser"
+    ],
+    "analyzer_errors": [],
+    "warnings": [],
+    "history_saved": true
+  }
+}
