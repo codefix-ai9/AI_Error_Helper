@@ -45,6 +45,7 @@ Thumbs.db
 node_modules/
 frontend/dist/
 frontend/.env
+frontend/.vite/
 .pytest_cache/
 data/*.db
 powershell.cmd
