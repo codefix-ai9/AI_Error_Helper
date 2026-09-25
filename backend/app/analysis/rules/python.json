@@ -1,0 +1,51 @@
+[
+    {
+        "id": "PY_LOGIC_MUTABLE_DEFAULT",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^\\s*def\\s+\\w+\\s*\\([^)]*=\\s*(?:\\[\\s*\\]|\\{\\s*\\})",
+        "evidence_level": "PATTERN"
+    },
+    {
+        "id": "PY_LOGIC_BARE_EXCEPT",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^\\s*except\\s*:",
+        "evidence_level": "PATTERN"
+    },
+    {
+        "id": "PY_LOGIC_EQ_NONE",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^.*?==\\s*None",
+        "evidence_level": "PATTERN"
+    },
+    {
+        "id": "PY_LOGIC_FLOAT_EQ",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^.*?==\\s*\\d+\\.\\d+",
+        "evidence_level": "HEURISTIC"
+    },
+    {
+        "id": "PY_LOGIC_IS_LITERAL",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^.*?\\bis\\s+(?:[\"']\\w*[\"']|\\d+)",
+        "evidence_level": "PATTERN"
+    },
+    {
+        "id": "PY_LOGIC_BUILTIN_SHADOW",
+        "error_type": "Logic",
+        "match_target": "source_code",
+        "pattern": "(?m)^\\s*(?:list|dict|str|int|float|set|tuple|type|id|dir)\\s*=",
+        "evidence_level": "HEURISTIC"
+    },
+    {
+        "id": "PY_FALLBACK_NAME_ERROR",
+        "error_type": "Name / Reference",
+        "match_target": "error_text",
+        "pattern": "^NameError: name '.*?' is not defined",
+        "evidence_level": "HEURISTIC"
+    }
+]

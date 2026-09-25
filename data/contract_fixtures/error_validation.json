@@ -1,0 +1,15 @@
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The request could not be understood.",
+    "details": [
+      {
+        "field": "body.source_code",
+        "message": "Field required"
+      }
+    ],
+    "request_id": "c1f802ea-0a9e-4e35-a6e5-430c4edda848"
+  }
+}
