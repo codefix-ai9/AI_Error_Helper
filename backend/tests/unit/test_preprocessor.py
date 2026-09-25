@@ -36,5 +36,7 @@ def test_language_registry():
     assert isinstance(analyzer, DummyAnalyzer)
     assert "python" in get_supported_languages()
     
-    with pytest.raises(ValueError):
-        get_analyzer(Language.JAVA)
+    # Graceful degradation fallback
+    fallback = get_analyzer(Language.JAVA)
+    assert type(fallback).__name__ == "FallbackAnalyzer"
+    assert fallback.analyze(None) == []
