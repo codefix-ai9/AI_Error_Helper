@@ -13,7 +13,7 @@
 - pip-audit: NOT YET RUN
 
 ## A-M2 Sync
-- **Date**: 2026-09-24
-- **Command**: `python scripts/tasks.py test`
-- **Output Summary**: 14 passed in 1.11s (all input layer validation, preprocessing, collector, and registry tests PASSED). Coverage 89% overall.
+- **Date**: 2026-09-25
+- **Command**: `python -m pytest backend\tests -v`
+- **Output Summary**: 14 passed in 0.40s (all validation, preprocessing, and redaction tests PASSED).
 - **Exit Code**: 0
