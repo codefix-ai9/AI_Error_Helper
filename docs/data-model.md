@@ -1,47 +1,27 @@
-# Data Model & API Contracts (v1.0)
+# Data Model
 
-## Enumerations
-- **Language**: `python`, `java`, `javascript`
-- **ErrorType**: `Syntax`, `Runtime`, `Type`, `Logic`, `Name / Reference`, `Dependency`, `Configuration`, `Indentation`, `Import`, `Unknown / Requires Review`
-- **Severity**: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`, `UNKNOWN`
-- **EvidenceLevel**: `CONFIRMED`, `PATTERN`, `HEURISTIC`, `NONE`
-- **AIStatus**: `ok`, `mock`, `disabled`, `unavailable`, `timeout`, `invalid_response`
-- **Provenance**: `static`, `ai`, `derived`
+The pipeline transforms raw incoming HTTP payloads strictly across domain-driven DTOs (Data Transfer Objects), ensuring robust type validation via Pydantic at every internal boundary.
 
-## AnalyzeRequest
-```json
-{
-  "language": "python",
-  "source_code": "print(total)",
-  "error_input": "NameError: name 'total' is not defined",
-  "expected_behavior": "Should print the total value"
-}
-```
+### Pipeline Stage DTO Sequence
+Data propagates through the backend using the following structured sequence:
+1. **`AnalyzeRequest`**: The raw incoming payload (language, source code, error text).
+2. **`ValidatedRequest`**: The payload after passing security and size constraints.
+3. **`NormalizedInput`**: Preprocessed text (secrets redacted, line numbers preserved).
+4. **`StaticAnalysisResult`**: The output of the static `RuleEngine` (AST and tracebacks).
+5. **`AIRequestContext`**: The compiled context block forwarded to the external LLM provider.
+6. **`AIOutcome`**: The unstructured or semi-structured raw response parsed from the LLM.
+7. **`Recommendation`**: The synthesized diff or plain-text suggestion for fixing the error.
+8. **`AnalysisResult`**: The final payload sent back to the API client, merging all context.
 
-## AnalysisResult
-Contains deterministic fields (static_findings), AI suggestions (explanation, debugging_steps, prevention_tip, practice_exercise, quiz_question), correction_diff, verification checks, and analysis_metadata.
-*Note: `practice_exercise` and `quiz_question` are additive fields vs the master prompt §5.3 contract.*
-See `data/contract_fixtures/result_hybrid_ok.json` for full JSON schema.
-
-## Envelopes
-All API responses use:
-```json
-{
-  "success": true,
-  "data": { ... },
-  "error": null
-}
-```
-Or:
-```json
-{
-  "success": false,
-  "data": null,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "...",
-    "details": [],
-    "request_id": "uuid"
-  }
-}
-```
+### The ErrorType Categories
+To maintain a strict and deterministic frontend contract, errors are rigidly mapped into one of 10 defined enum `ErrorType` categories:
+1. `Syntax`
+2. `Runtime`
+3. `Type`
+4. `Logic`
+5. `Name / Reference`
+6. `Dependency`
+7. `Configuration`
+8. `Indentation`
+9. `Import`
+10. `Unknown / Requires Review`
