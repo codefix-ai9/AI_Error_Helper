@@ -19,6 +19,7 @@ from backend.app.collector.collector import classify_and_split
 from backend.app.analysis.languages.python.ast_parser import parse_ast_for_errors
 from backend.app.analysis.languages.python.traceback_parser import parse_traceback
 from backend.app.analysis.rules.engine import RuleEngine, load_rules, compute_confidence
+from backend.app.analysis.recommendation import attempt_deterministic_correction, verify_correction, generate_correction_diff
 
 
 def get_severity(category: str) -> Severity:
@@ -146,6 +147,18 @@ class AnalysisService(AnalysisServicePort):
             final_severity = static_res.severity
             final_location = static_res.location
             
+            # Recommendation engine (Deterministic fallback)
+            corrected_code = None
+            correction_diff = None
+            if primary:
+                possible_correction = attempt_deterministic_correction(normalized.source_code, primary)
+                if possible_correction:
+                    if verify_correction(possible_correction):
+                        corrected_code = possible_correction
+                        correction_diff = generate_correction_diff(normalized.source_code, corrected_code)
+                    else:
+                        analyzer_errors.append("Deterministic correction failed static verification.")
+            
             # Build Result
             result = AnalysisResult(
                 analysis_id=str(uuid.uuid4()),
@@ -155,6 +168,11 @@ class AnalysisService(AnalysisServicePort):
                 severity=final_severity.value,
                 location=final_location,
                 summary=f"{final_error_type.value} detected" if primary else "Unknown Error",
+                corrected_code=corrected_code,
+                correction_diff=correction_diff,
+                debugging_steps=list(),
+                prevention_tip=None,
+                key_concept=None,
                 confidence=confidence,
                 confidence_basis=["static"] if primary else [],
                 static_findings=unique_findings,
