@@ -8,3 +8,9 @@ def build_ai_engine(settings: Settings) -> AIEnginePort:
 def build_history_repository(settings: Settings) -> HistoryPort:
     from backend.app.history.repository import build_history_repository as factory
     return factory(settings)
+
+def get_analysis_service(settings: Settings) -> 'AnalysisServicePort':
+    from backend.app.application.services import AnalysisService
+    ai_engine = build_ai_engine(settings)
+    history_repo = build_history_repository(settings)
+    return AnalysisService(ai_engine=ai_engine, history=history_repo)

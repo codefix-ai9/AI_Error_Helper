@@ -6,5 +6,5 @@ pytest==8.3.3
 pytest-cov==5.0.0
 # We will use ast and tokenize from the standard library for Python.
 
-
 # --- Part B ---
+uvicorn==0.30.6
