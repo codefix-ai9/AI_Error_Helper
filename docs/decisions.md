@@ -8,3 +8,5 @@
 | **D-004** | Code Execution vs Sandboxing | Strictly forbidden (static-only) | Security rules in prompt §11 strictly override report §6 (which lists execution as future scope). | Analyzers will rely exclusively on AST parsing (`tree-sitter`, `ast`) and regex rules without evaluating untrusted input. |
 
 D-006: A-M4/A-M5 scope reduced under deadline constraint; Java/JS analyzers and recommendation diff-engine deferred to future work, documented here as an intentional decision, not a defect.
+
+D-007: ErrorType enum defines 10 categories (REQ-006), but the rule engine (python.json) and traceback_parser currently only classify into Syntax, Runtime, Type, Name/Reference, Import, Indentation, Logic. Configuration and Dependency inputs are handled gracefully (no crash, valid AnalysisResult returned) but fall back to Runtime/Import classification rather than a dedicated category-specific rule. This is an intentional scope limitation under the deadline — future work would add python.json rules with match_target: error_text targeting configuration/dependency-specific exception patterns (e.g. KeyError on os.environ, pkg_resources.* exceptions).
