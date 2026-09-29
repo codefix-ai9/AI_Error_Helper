@@ -40,3 +40,6 @@ data/app.db-journal
 # OS
 .DS_Store
 Thumbs.db
+
+# --- Part A ---
+AI_Error_Helper/
