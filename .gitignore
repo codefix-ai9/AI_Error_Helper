@@ -49,3 +49,5 @@ frontend/.vite/
 .pytest_cache/
 data/*.db
 powershell.cmd
+AI_Error_Helper/
+
