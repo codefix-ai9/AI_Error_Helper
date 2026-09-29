@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "33333333-3333-4333-8333-333333333333",
+  "created_at": "2026-09-24T12:00:00Z",
+  "language": "python",
+  "error_type": "Syntax",
+  "severity": "CRITICAL",
+  "location": {
+    "line": 3,
+    "column": 17,
+    "end_line": 3
+  },
+  "summary": "SyntaxError: expected ':' at end of 'if' statement header.",
+  "explanation": "Deterministic static analysis detected a missing colon on line 3. Python compound statements (if, for, while, def, class) require a trailing colon before their indented suite.",
+  "probable_cause": "The colon character was omitted at the end of the conditional expression.",
+  "affected_code": "if x > 10",
+  "corrected_code": "if x > 10:",
+  "correction_diff": {
+    "changed_lines_before": [3],
+    "changed_lines_after": [3],
+    "unified": "@@ -2,3 +2,3 @@\n-if x > 10\n+if x > 10:"
+  },
+  "debugging_steps": [
+    "Navigate to line 3 in the editor.",
+    "Inspect the end of the 'if' condition statement.",
+    "Add the missing ':' colon character before the newline.",
+    "Verify the indentation of the subsequent block."
+  ],
+  "prevention_tip": "Look for the syntax highlighter indicating unclosed compound statements, and configure an automatic formatter.",
+  "key_concept": "Compound Statement Header Syntax",
+  "confidence": 1.0,
+  "confidence_basis": [
+    "Python ast.parse SyntaxError exception",
+    "exact line and column emitted by parser"
+  ],
+  "uncertainty_note": "Deterministic parser certainty: code failed grammar validation directly.",
+  "static_findings": [
+    {
+      "rule_id": "PY-SYN-001",
+      "category": "Syntax",
+      "evidence_level": "CONFIRMED",
+      "source": "compiler",
+      "message": "SyntaxError: expected ':' at end of compound statement header.",
+      "location": {
+        "line": 3,
+        "column": 17
+      },
+      "snippet": "if x > 10",
+      "concept": "syntax rules"
+    }
+  ],
+  "ai_suggestions": [],
+  "verification": {
+    "corrected_code_parses": true,
+    "original_finding_resolved": true,
+    "note": "Passes syntax/static re-check. This is NOT proof of correct behavior."
+  },
+  "provenance": {
+    "error_type": "static",
+    "severity": "static",
+    "location": "static",
+    "explanation": "static",
+    "corrected_code": "static",
+    "debugging_steps": "static",
+    "prevention_tip": "static"
+  },
+  "ai_status": "unavailable",
+  "analysis_metadata": {
+    "analysis_mode": "static_only",
+    "pipeline_version": "1.0.0",
+    "prompt_version": "",
+    "provider": "anthropic",
+    "model": "claude-3-5-sonnet",
+    "ai_latency_ms": 0,
+    "analyzers_run": [
+      "python-syntax-analyzer"
+    ],
+    "analyzer_errors": [
+      "AI provider unavailable: connection timeout"
+    ],
+    "warnings": [
+      "AI explanation is unavailable. Showing deterministic static analysis findings only."
+    ],
+    "history_saved": true
+  }
+}

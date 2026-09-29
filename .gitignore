@@ -40,3 +40,14 @@ data/app.db-journal
 # OS
 .DS_Store
 Thumbs.db
+
+# --- Part B ---
+node_modules/
+frontend/dist/
+frontend/.env
+frontend/.vite/
+.pytest_cache/
+data/*.db
+powershell.cmd
+AI_Error_Helper/
+

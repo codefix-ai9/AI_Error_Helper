@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "11111111-1111-4111-8111-111111111111",
+  "created_at": "2026-09-24T10:00:00Z",
+  "language": "python",
+  "error_type": "Name / Reference",
+  "severity": "HIGH",
+  "location": {
+    "line": 4,
+    "column": 7,
+    "end_line": 4
+  },
+  "summary": "Name 'total' is referenced before assignment or definition.",
+  "explanation": "In Python, using a variable before it has been assigned a value raises a NameError. On line 4, 'total' is being referenced inside print(total), but no assignment statement such as 'total = 0' exists in the preceding scope.",
+  "probable_cause": "The variable 'total' was never initialized before being referenced in the program body.",
+  "affected_code": "print(total)",
+  "corrected_code": "total = 0\nprint(total)",
+  "correction_diff": {
+    "changed_lines_before": [4],
+    "changed_lines_after": [4, 5],
+    "unified": "@@ -3,2 +3,3 @@\n-print(total)\n+total = 0\n+print(total)"
+  },
+  "debugging_steps": [
+    "Check line 4 to locate where 'total' is first read.",
+    "Verify whether 'total' was declared or initialized in an outer scope or earlier line.",
+    "Inspect the spelling of 'total' to confirm no typo occurred.",
+    "Initialize 'total = 0' or an appropriate default value before reading it."
+  ],
+  "prevention_tip": "Always declare and initialize accumulators or state variables before loops and conditional blocks.",
+  "key_concept": "Variable Scope & Binding",
+  "confidence": 0.95,
+  "confidence_basis": [
+    "parser-confirmed",
+    "error text agrees with source AST"
+  ],
+  "uncertainty_note": "High confidence: parser and runtime traceback precisely identify the uninitialized symbol.",
+  "static_findings": [
+    {
+      "rule_id": "PY-NAME-001",
+      "category": "Name / Reference",
+      "evidence_level": "CONFIRMED",
+      "source": "rule",
+      "message": "Name 'total' is used on line 4 but never defined.",
+      "location": {
+        "line": 4,
+        "column": 7
+      },
+      "snippet": "print(total)",
+      "concept": "variable scope"
+    }
+  ],
+  "ai_suggestions": [
+    {
+      "kind": "explanation",
+      "text": "Variables in Python must be bound to a value before being read.",
+      "provenance": "ai"
+    },
+    {
+      "kind": "correction",
+      "text": "Initialize total before using it.",
+      "provenance": "ai"
+    }
+  ],
+  "verification": {
+    "corrected_code_parses": true,
+    "original_finding_resolved": true,
+    "note": "Passes syntax/static re-check. This is NOT proof of correct behavior."
+  },
+  "provenance": {
+    "error_type": "static",
+    "severity": "static",
+    "location": "static",
+    "explanation": "ai",
+    "corrected_code": "ai",
+    "debugging_steps": "ai",
+    "prevention_tip": "ai"
+  },
+  "ai_status": "ok",
+  "analysis_metadata": {
+    "analysis_mode": "hybrid",
+    "pipeline_version": "1.0.0",
+    "prompt_version": "v1.0",
+    "provider": "anthropic",
+    "model": "claude-3-5-sonnet",
+    "ai_latency_ms": 780,
+    "analyzers_run": [
+      "python-ast-analyzer",
+      "python-traceback-parser"
+    ],
+    "analyzer_errors": [],
+    "warnings": [],
+    "history_saved": true
+  }
+}
