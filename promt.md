@@ -1,5 +1,8 @@
-Fast-mode sanity check before A-M4:
-1. Confirm the AI handoff calls NullAIEngine.explain(ctx: AIRequestContext) — not any other method name — and that AnalysisResult still returns a valid result when NullAIEngine returns status="disabled".
-2. Confirm no A-M3 code touched models/, core/, application/ports.py, or data/contract_fixtures/ — run `git diff --stat contracts-v1..HEAD -- backend/app/models backend/app/core backend/app/application/ports.py data/contract_fixtures` (or main if tag missing). Should be empty.
-
-Then commit everything with prefix feat(a): implement A-M3 python analyzer + orchestrator (S1 milestone). Move to A-M4: Java/JS analyzers — skip per our fast-mode plan, just register Python-only in the registry with a documented graceful-degrade note for Java/JS. Then A-M5 minimal (static-only fallback, no diff/verification yet). Then A-M6 (5 sample cases). Then minimal docs. Report back with one final full pytest run at the end of ALL of it.
+Confirm and fix for real this time:
+1. git ls-files -s AI_Error_Helper (read-only — should show mode 160000)
+2. git rm --cached AI_Error_Helper (exact command, no -r, no -f)
+3. Check .gitignore already has "AI_Error_Helper/" — if not, add it under "# --- Part A ---"
+4. git add .gitignore
+5. git commit -m "chore(a): fully untrack nested AI_Error_Helper gitlink"
+6. git push origin feat/part-a-analysis
+7. git status — confirm AI_Error_Helper no longer appears at all.
