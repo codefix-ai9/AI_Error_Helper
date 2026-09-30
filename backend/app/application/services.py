@@ -146,11 +146,26 @@ class AnalysisService(AnalysisServicePort):
             final_error_type = static_res.error_type
             final_severity = static_res.severity
             final_location = static_res.location
-            
+
+            # Extract AI payload fields when available
+            ai_payload = ai_outcome.payload if ai_outcome and ai_outcome.payload else {}
+            ai_explanation = ai_payload.get("explanation") if ai_payload else None
+            ai_probable_cause = ai_payload.get("probable_cause") if ai_payload else None
+            ai_affected_code = ai_payload.get("affected_code") if ai_payload else None
+            ai_corrected_code = ai_payload.get("corrected_code") if ai_payload else None
+            ai_debugging_steps = ai_payload.get("debugging_steps", []) if ai_payload else []
+            ai_prevention_tip = ai_payload.get("prevention_tip") if ai_payload else None
+            ai_key_concept = ai_payload.get("key_concept") if ai_payload else None
+            ai_uncertainty_note = ai_payload.get("uncertainty_note") if ai_payload else None
+
             # Recommendation engine (Deterministic fallback)
             corrected_code = None
             correction_diff = None
-            if primary:
+            # Prefer AI corrected_code; fall back to deterministic
+            if ai_corrected_code:
+                corrected_code = ai_corrected_code
+                correction_diff = generate_correction_diff(normalized.source_code, corrected_code)
+            elif primary:
                 possible_correction = attempt_deterministic_correction(normalized.source_code, primary)
                 if possible_correction:
                     if verify_correction(possible_correction):
@@ -158,7 +173,24 @@ class AnalysisService(AnalysisServicePort):
                         correction_diff = generate_correction_diff(normalized.source_code, corrected_code)
                     else:
                         analyzer_errors.append("Deterministic correction failed static verification.")
-            
+
+            ai_ok = ai_outcome and ai_outcome.status in (AIStatus.OK, AIStatus.MOCK)
+            analysis_mode = "hybrid" if ai_ok else "static_only"
+
+            # Build provenance map
+            provenance_map = {
+                "error_type": "static" if primary else "derived",
+                "severity": "static" if primary else "derived",
+                "location": "static" if primary and primary.location else "derived",
+            }
+            if ai_ok:
+                provenance_map.update({
+                    "explanation": "ai",
+                    "corrected_code": "ai" if ai_corrected_code else "static",
+                    "debugging_steps": "ai",
+                    "prevention_tip": "ai",
+                })
+
             # Build Result
             result = AnalysisResult(
                 analysis_id=str(uuid.uuid4()),
@@ -168,25 +200,30 @@ class AnalysisService(AnalysisServicePort):
                 severity=final_severity.value,
                 location=final_location,
                 summary=f"{final_error_type.value} detected" if primary else "Unknown Error",
+                explanation=ai_explanation,
+                probable_cause=ai_probable_cause,
+                affected_code=ai_affected_code,
                 corrected_code=corrected_code,
                 correction_diff=correction_diff,
-                debugging_steps=list(),
-                prevention_tip=None,
-                key_concept=None,
+                debugging_steps=ai_debugging_steps if ai_ok else [],
+                prevention_tip=ai_prevention_tip,
+                key_concept=ai_key_concept,
+                uncertainty_note=ai_uncertainty_note,
                 confidence=confidence,
                 confidence_basis=["static"] if primary else [],
                 static_findings=unique_findings,
                 ai_suggestions=ai_outcome.suggestions if ai_outcome else [],
-                provenance={
-                    "error_type": "static" if primary else "derived",
-                    "severity": "static" if primary else "derived",
-                    "location": "static" if primary and primary.location else "derived"
-                },
+                provenance=provenance_map,
                 ai_status=ai_outcome.status if ai_outcome else AIStatus.DISABLED,
                 analysis_metadata=AnalysisMetadata(
-                    analysis_mode="hybrid",
+                    analysis_mode=analysis_mode,
+                    prompt_version="v1",
+                    provider=ai_outcome.provider or "" if ai_outcome else "",
+                    model=ai_outcome.model or "" if ai_outcome else "",
+                    ai_latency_ms=ai_outcome.latency_ms if ai_outcome else 0,
                     analyzers_run=analyzers_run,
                     analyzer_errors=analyzer_errors,
+                    warnings=ai_outcome.warnings if ai_outcome else [],
                     history_saved=False
                 )
             )
