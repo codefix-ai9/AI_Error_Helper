@@ -76,3 +76,85 @@
 - **Known Limitations**: Rate limiter is in-memory (resets on restart); sufficient for local tool.
 - **Status**: Milestone B-M3 COMPLETE.
 
+---
+
+## Milestone B-M4: Dashboard Complete
+- **Date**: 2026-10-16
+- **Scope**: Every §10 section and state implemented and verified:
+  - Header with branding, tab navigation, MOCK MODE badge, and Fixture Mode indicator.
+  - Two-pane layout with responsive collapsing below 1024px.
+  - Synchronized line numbers on CodeInput with 20,000 char counter.
+  - ErrorInput with 10,000 char counter.
+  - Additive optional `expected_behavior` field.
+  - ResultPanel strictly following §10 order: Category -> Severity -> Location -> Confidence Chips -> Detected by Static Analysis -> AI Explanation -> Probable Cause -> Affected Code with highlight -> Suggested Correction with side-by-side / unified diff & verification note -> Debugging Steps -> Prevention Tip & Key Concept -> Uncertainty / Confidence basis -> Analysis Metadata.
+  - Explicit provenance badges (`STATIC FACT`, `AI ASSISTED`, `DERIVED`).
+  - Verbatim §7.7 banner on AI failure (`disabled`, `unavailable`, `timeout`, `invalid_response`).
+  - HistoryView with 300ms debounced search, language/severity/category filters, record inspection, and deletion.
+  - AnalyticsView with summary cards, SVG activity trend chart, and CSS distribution bars.
+  - Copy to clipboard and Export as JSON / Plain Text.
+  - Prevention of duplicate submits (button disabled during loading) with AbortController cancel button.
+- **Commands & Results**:
+  - `npm --prefix frontend test -- --run`: All 35 tests across 5 test suites PASS.
+  - Manual scenario walkthrough verified:
+    - Python: NameError (`compute_total`) -> Category `Name / Reference`, Severity `HIGH`, Line `4`, unified diff generated, verification note confirmed.
+    - JavaScript: TypeError (`getUserDisplayName`) -> Category `Type`, Line `2`.
+    - Java: NullPointerException (`UserManager`) -> Category `Runtime`, Line `4`.
+    - Fallback: `LLM_PROVIDER=disabled` -> Verbatim banner displayed, static-only results rendered.
+- **Status**: Milestone B-M4 COMPLETE.
+
+---
+
+## Milestone B-M5: Test Completeness & Coverage Gates
+- **Date**: 2026-10-16
+- **Scope**: Complete test coverage across frontend (Vitest + RTL), backend integration (TestClient), and unit tests.
+- **Commands & Results**:
+  - `npm --prefix frontend test -- --run`: **35 passed** in 5 test files (`App.test.jsx`, `HistoryView.test.jsx`, `ResultPanel.test.jsx`, `validation.test.js`, `fixtures.test.js`).
+  - `python -m pytest backend/tests/unit/test_ai_engine.py -q`: **21 passed** (mock provider, repair, prompt injection, length checks).
+  - `python -m pytest backend/tests/integration/test_platform.py -v`: **24 passed** (all API endpoints, envelope consistency, no stack trace leakage, rate limiter, history CRUD, analytics).
+  - `python -m pytest backend/tests/ -v --cov=backend/app --cov-report=term`: **101 passed** in 12.84s.
+- **Coverage Gate Verification**:
+  - `backend/app/ai/validator.py`: **95%** coverage (Gate: ≥ 90% PASS).
+  - `backend/app/validation/request_validator.py`: **96%** coverage (Gate: ≥ 90% PASS).
+  - `backend/app/history/repository.py`: **92%** coverage.
+  - `backend/app/api/routers/`: **92% - 100%** coverage.
+  - Overall backend packages: **84%** coverage (Gate: ≥ 80% PASS).
+- **Status**: Milestone B-M5 COMPLETE.
+
+---
+
+## Milestone B-M6: Documentation Deliverables, Assembly & Final Audit
+- **Date**: 2026-10-16
+- **Scope**: Master `README.md` assembly, `docs/api.md`, `docs/ai-pipeline.md`, `docs/demo-script.md`, `docs/viva-prep.md`, `docs/requirements-traceability.md`, S3 cross-review, and §18 final audit.
+- **Files Created / Updated**:
+  - `README.md`: Complete master guide with 5-command quickstart, architecture, pipeline, security, and demo instructions.
+  - `docs/api.md`: Comprehensive API reference with response envelopes, error structures, and real payload examples.
+  - `docs/ai-pipeline.md`: Hybrid architecture justification, prompt-injection defense, output validator, and authority lock.
+  - `docs/demo-script.md`: Structured 10-minute demonstration covering 6 scenarios.
+  - `docs/viva-prep.md`: 20 examiner Q&As grounded directly in the codebase.
+  - `docs/requirements-traceability.md`: Traceability matrix with all Part B requirements mapped to implementation and tests.
+  - `docs/verification-log-part-b.md`: Full verification log updated.
+- **Status**: Milestone B-M6 COMPLETE.
+
+---
+
+## Sync Points Participation (§B6)
+- **S0 (Contract Freeze)**: Reviewed contracts, models, envelope, ports. Approved.
+- **S1 (Static Analysis Sync)**: Verified frontend and API compatibility against Part A's static analyzer and `NullAIEngine`.
+- **S2 (AI Engine + Persistence + Full Hybrid)**: Verified `RealAIEngine`, `MockProvider`, SQLite persistence, and recommendation wiring.
+- **S3 (Cross-Review & Final Audit)**: All unit, integration, frontend, and architecture tests passing with required coverage gates.
+
+---
+
+## Section 18: Final Audit Checklist
+- [x] **Architecture test passes; layers respected (§4.2)**: Verified via `pytest backend/tests/unit/test_architecture.py`.
+- [x] **Every REQ in the register is Complete / FUTURE with implementation + test links**: Documented in `docs/requirements-traceability.md`.
+- [x] **`/analyze` returns the §5.3 contract; facts, template guidance and AI text carry correct provenance**: Verified by `test_analyze_result_has_required_fields` and `ResultPanel.test.jsx`.
+- [x] **With `LLM_PROVIDER=disabled` (or killed provider) app returns educational static-only result and verbatim banner**: Verified in `test_ai_failure_returns_200_with_static_result` and `ResultPanel.test.jsx`.
+- [x] **Mock mode is labelled everywhere; no mock output is described as real AI**: Verified with header MOCK MODE badge, `ai_status: "mock"`, and `analysis_metadata.provider: "mock"`.
+- [x] **Prompt-injection, oversize, malformed-JSON and timeout tests pass**: Verified in `test_ai_engine.py` and `test_platform.py`.
+- [x] **Coverage gate met**: `ai/validator` at 95% (gate ≥ 90%), backend overall at 84% (gate ≥ 80%).
+- [x] **No secrets in repo or git history; `.env.example` complete**: Verified `.env.example` has all configuration keys; zero secrets checked in.
+- [x] **Docs match the code; API examples came from real responses; fresh-clone test passed**: All 6 required docs created and aligned.
+- [x] **Limitations documented honestly**: Local tool, no auth, in-memory rate limiting, heuristic logic detection, and AI boundaries documented in README and viva-prep.
+
+
