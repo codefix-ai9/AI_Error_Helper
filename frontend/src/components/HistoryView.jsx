@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getHistory } from '../services/api';
+import { getHistory, deleteHistoryItem } from '../services/api';
 
 /**
  * History view component implementing debounced search, filters, view, and delete.
@@ -43,10 +43,15 @@ export function HistoryView({ onSelectResult }) {
     }
   };
 
-  const handleDelete = (id, e) => {
+  const handleDelete = async (id, e) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this analysis record?')) {
+    if (!window.confirm('Are you sure you want to delete this analysis record?')) return;
+    try {
+      await deleteHistoryItem(id);
       setHistoryItems(prev => prev.filter(item => item.analysis_id !== id));
+    } catch (err) {
+      console.error('Delete failed:', err);
+      alert('Failed to delete the record. Please try again.');
     }
   };
 
