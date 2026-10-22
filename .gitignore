@@ -51,3 +51,6 @@ data/*.db
 powershell.cmd
 AI_Error_Helper/
 
+# --- Test Coverage ---
+.coverage
+htmlcov/
