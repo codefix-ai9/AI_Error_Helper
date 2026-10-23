@@ -198,3 +198,39 @@ export async function getHistory(params = {}) {
   const envelope = await res.json();
   return envelope.data;
 }
+
+/**
+ * Fetch a single history item by ID
+ * @param {string} analysisId
+ * @returns {Promise<Object>}
+ */
+export async function getHistoryItem(analysisId) {
+  if (USE_FIXTURES) {
+    return FIXTURES.python_name_error;
+  }
+  const res = await fetch(`${API_BASE_URL}/api/v1/history/${encodeURIComponent(analysisId)}`);
+  if (!res.ok) {
+    throw new Error('History item not found');
+  }
+  const envelope = await res.json();
+  return envelope.data;
+}
+
+/**
+ * Delete a history item by ID
+ * @param {string} analysisId
+ * @returns {Promise<boolean>}
+ */
+export async function deleteHistoryItem(analysisId) {
+  if (USE_FIXTURES) {
+    return true;
+  }
+  const res = await fetch(`${API_BASE_URL}/api/v1/history/${encodeURIComponent(analysisId)}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    const envelope = await res.json().catch(() => ({}));
+    throw new Error(envelope.error?.message || 'Failed to delete record');
+  }
+  return true;
+}

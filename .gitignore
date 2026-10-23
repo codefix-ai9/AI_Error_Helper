@@ -47,6 +47,8 @@ frontend/dist/
 frontend/.env
 frontend/.vite/
 .pytest_cache/
+.coverage
+htmlcov/
 data/*.db
 powershell.cmd
 AI_Error_Helper/

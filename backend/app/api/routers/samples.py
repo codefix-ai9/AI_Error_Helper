@@ -9,7 +9,7 @@ from backend.app.models.envelope import Envelope
 
 router = APIRouter(tags=["samples"])
 
-_SAMPLES_PATH = Path(__file__).parents[5] / "data" / "sample_errors.json"
+_SAMPLES_PATH = Path(__file__).resolve().parents[4] / "data" / "sample_errors.json"
 
 
 @router.get("/samples", response_model=Envelope[list])
